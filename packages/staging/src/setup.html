@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Required</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="{{cssPath}}" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="title">Setup Required</h1>
+        <p class="description">Password not configured</p>
+      </div>
+      
+      <div class="alert">
+        <p>To protect your routes, you need to set up a password. You can do this in two ways:</p>
+      </div>
+
+      <div class="code">
+        <div class="code-comment"># Using environment variable:</div>
+        STAGING_PASSWORD=your-password<br><br>
+        <div class="code-comment"># Or when initializing the middleware:</div>
+        staging({<br>
+        &nbsp;&nbsp;password: 'your-password'<br>
+        })
+      </div>
+
+      <p class="text-center">
+        Please set up the password and restart your application.
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+{
+  "name": "staging",
+  "version": "0.0.1",
+  "description": "Open-source alternative to Vercel's Password Protection feature",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "vercel",
+    "protection",
+    "password",
+    "authentication",
+    "middleware",
+    "express",
+    "staging",
+    "preview",
+    "production"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntoineKM/staging.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AntoineKM/staging/issues"
+  },
+  "homepage": "https://github.com/AntoineKM/staging#readme",
+  "peerDependencies": {
+    "express": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.10.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
+}
