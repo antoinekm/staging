@@ -178,4 +178,4 @@ The middleware:
 
 ## License
 
-MIT
+[MIT](LICENSE)
