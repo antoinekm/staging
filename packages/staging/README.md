@@ -2,6 +2,18 @@
 
 Open-source alternative to Vercel's Password Protection feature
 
+[![npm version](https://img.shields.io/npm/v/staging.svg)](https://www.npmjs.com/package/staging)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/staging)](https://bundlephobia.com/package/staging)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![npm downloads](https://img.shields.io/npm/dm/staging.svg)](https://www.npmjs.com/package/staging)
+
+## Overview
+
+Staging provides a simple, secure way to password protect your staging environments. It works seamlessly with Express and Next.js applications, offering a modern, responsive login interface.
+
+![Staging Login Page](https://raw.githubusercontent.com/AntoineKM/staging/master/screenshots/login-preview.png)
+
 ## Features
 
 * 🔐 Simple password protection
@@ -179,3 +191,9 @@ The middleware:
 ## License
 
 [MIT](LICENSE)
+
+***
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/yourusername">Antoine Kingue</a></sub>
+</p>
