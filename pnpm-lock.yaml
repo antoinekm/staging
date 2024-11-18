@@ -27,7 +27,7 @@ importers:
         specifier: ^2.0.4
         version: 2.3.0
 
-  examples/nextjs:
+  examples/next:
     dependencies:
       cookie-parser:
         specifier: ^1.4.7
