@@ -1,6 +1,9 @@
 {
   "name": "staging-root",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo run build",
     "build:packages": "turbo run build --filter='./packages/*'",
