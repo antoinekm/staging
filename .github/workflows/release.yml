@@ -1,0 +1,50 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+env:
+  NODE_OPTIONS: "--max_old_space_size=4096"
+jobs:
+  release:
+    if: github.repository == 'AntoineKM/staging'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Extract pnpm version
+        id: extract_pnpm_version
+        run: echo "::set-output name=pnpm_version::$(jq -r '.packageManager' package.json | cut -d'@' -f2)"
+
+      - name: Use pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: ${{ steps.extract_pnpm_version.outputs.pnpm_version }}
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          cache: "pnpm"
+
+      - name: Install Dependencies
+        run: pnpm i
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build Packages
+        run: pnpm build:packages
+
+      - name: Create Release Pull Request or Publish to npm
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run release
+          version: pnpm run version
+          commit: "🔖 release version"
+          title: "🔖 release version"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
