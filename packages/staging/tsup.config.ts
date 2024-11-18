@@ -1,18 +1,18 @@
-import { defineConfig } from "tsup";
 import fs from "fs";
 import path from "path";
+import { defineConfig } from "tsup";
 
 const copyAssets = async () => {
   const assets = [
-    { src: 'template.html', dest: 'template.html' },
-    { src: 'setup.html', dest: 'setup.html' },
-    { src: 'styles.css', dest: 'styles.css' }
+    { src: "template.html", dest: "template.html" },
+    { src: "setup.html", dest: "setup.html" },
+    { src: "styles.css", dest: "styles.css" },
   ];
-  
+
   for (const asset of assets) {
     const sourcePath = path.join(__dirname, "src", asset.src);
     const destPath = path.join(__dirname, "dist", asset.dest);
-    
+
     try {
       await fs.promises.copyFile(sourcePath, destPath);
       console.log(`✓ Copied ${asset.src} to dist`);
@@ -39,7 +39,7 @@ export default defineConfig({
     "express-session",
     "cookie-parser",
     "jsonwebtoken",
-    "crypto"
+    "crypto",
   ],
   async onSuccess() {
     await copyAssets();
