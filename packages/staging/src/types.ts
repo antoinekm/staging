@@ -1,13 +1,17 @@
-import { Request } from "express";
+import "express-session";
 
-declare global {
-  namespace Express {
-    interface Request {
-      session?: {
-        returnTo?: string;
-        [key: string]: any;
-      };
-    }
+declare module "express-serve-static-core" {
+  interface Request {
+    session?: {
+      returnTo?: string;
+      [key: string]: unknown;
+    };
+  }
+}
+
+declare module "express-session" {
+  interface SessionData {
+    returnTo?: string;
   }
 }
 
