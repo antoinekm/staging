@@ -4,7 +4,7 @@ import express from "express";
 import session from "express-session";
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import next from "next";
-import { staging } from "staging";
+import staging from "staging";
 import { parse } from "url";
 
 const port = parseInt(process.env.PORT || "3000", 10);
@@ -39,13 +39,7 @@ app.prepare().then(() => {
   // Apply password protection middleware
   expressApp.use(
     staging({
-      password: process.env.SITE_PASSWORD || "1234",
-      // Explicitly set public routes if needed
       publicRoutes: ["/_next/static/.*", "/api/public/.*"],
-      // Optional: specify protected routes (by default, all routes are protected)
-      // protectedRoutes: ['/admin', '/dashboard'],
-      redirectUrl: "/", // Default redirect after login
-      siteName: process.env.SITE_NAME || "Protected Site",
     }),
   );
 
