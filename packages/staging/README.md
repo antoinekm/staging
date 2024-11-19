@@ -18,12 +18,17 @@ Staging provides a simple, secure way to password protect your staging environme
 
 * 🔐 Simple password protection
 * 🎨 Beautiful, modern login page with light/dark mode
-* ⚡️ Works with Express and Next.js
+* ⚡️ Works with Express, Next.js and Nuxt.js
 * 🎯 Flexible route protection with regex support
 * 🔄 Session support for better UX
 * 🌍 Environment variables configuration
 * 🛡️ Secure by default
 * 📱 Mobile-friendly design
+
+## Frameworks Support
+
+* Express & Next.js: Use this package directly
+* Nuxt.js: Use [@staging/nuxt](https://github.com/AntoineKM/staging/tree/main/packages/nuxt)
 
 ## Installation
 
@@ -31,6 +36,12 @@ Staging provides a simple, secure way to password protect your staging environme
 npm install staging
 # or
 yarn add staging
+```
+
+For Nuxt.js applications, install the Nuxt-specific package instead:
+
+```bash
+npm install @staging/nuxt
 ```
 
 ## Quick Start
@@ -97,6 +108,10 @@ app.prepare().then(() => {
   }).listen(port);
 });
 ```
+
+### Nuxt.js
+
+For Nuxt.js integration, please refer to [@staging/nuxt](https://github.com/AntoineKM/staging/tree/main/packages/nuxt).
 
 ## Configuration
 
@@ -195,5 +210,5 @@ The middleware:
 ***
 
 <p align="center">
-  <sub>Built with ❤️ by <a href="https://github.com/yourusername">Antoine Kingue</a></sub>
+  <sub>Built with ❤️ by <a href="https://github.com/AntoineKM">Antoine Kingue</a></sub>
 </p>
