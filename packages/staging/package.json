@@ -10,13 +10,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
-    "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "prepublishOnly": "pnpm run build"
+    "dev": "tsup --watch"
   },
   "keywords": [
     "vercel",
@@ -29,7 +23,7 @@
     "preview",
     "production"
   ],
-  "author": "Your Name",
+  "author": "Antoine Kingue <contact@antoinek.fr>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -38,7 +32,7 @@
   "bugs": {
     "url": "https://github.com/AntoineKM/staging/issues"
   },
-  "homepage": "https://github.com/AntoineKM/staging#readme",
+  "homepage": "https://github.com/AntoineKM/staging/tree/master/packages/staging",
   "peerDependencies": {
     "express": ">=4.0.0"
   },
