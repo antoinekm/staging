@@ -1,5 +1,5 @@
 {
-  "name": "@staging/nuxt",
+  "name": "staging-nuxt",
   "version": "0.0.0",
   "description": "Nuxt module for staging password protection",
   "repository": {

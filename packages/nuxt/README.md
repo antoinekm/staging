@@ -1,9 +1,9 @@
-# @staging/nuxt
+# staging-nuxt
 
 Nuxt.js integration for [staging](https://github.com/AntoineKM/staging) password protection middleware.
 
-[![npm version](https://img.shields.io/npm/v/@staging/nuxt.svg)](https://www.npmjs.com/package/@staging/nuxt)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@staging/nuxt)](https://bundlephobia.com/package/@staging/nuxt)
+[![npm version](https://img.shields.io/npm/v/staging-nuxt.svg)](https://www.npmjs.com/package/staging-nuxt)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/staging-nuxt)](https://bundlephobia.com/package/staging-nuxt)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
@@ -16,11 +16,11 @@ This package provides Nuxt.js integration for the staging password protection mi
 ## Installation
 
 ```bash
-npm install @staging/nuxt
+npm install staging-nuxt
 # or
-yarn add @staging/nuxt
+yarn add staging-nuxt
 # or
-pnpm add @staging/nuxt
+pnpm add staging-nuxt
 ```
 
 ## Usage
@@ -29,7 +29,7 @@ Create a server middleware file in your Nuxt.js project:
 
 ```typescript
 // server/middleware/staging.ts
-import { stagingMiddleware } from "@staging/nuxt";
+import { stagingMiddleware } from "staging-nuxt";
 
 export default stagingMiddleware({
   password: process.env.STAGING_PASSWORD || "your-password",

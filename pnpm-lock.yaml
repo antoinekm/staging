@@ -78,7 +78,7 @@ importers:
 
   examples/nuxt:
     dependencies:
-      '@staging/nuxt':
+      'staging-nuxt':
         specifier: workspace:*
         version: link:../../packages/nuxt
       nuxt:
