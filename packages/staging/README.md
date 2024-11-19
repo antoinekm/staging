@@ -39,7 +39,7 @@ yarn add staging
 
 ```typescript
 import express from 'express';
-import { staging } from 'staging';
+import staging from 'staging';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -59,7 +59,7 @@ import { createServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
 import express from 'express';
-import { staging } from 'staging';
+import staging from 'staging';
 import cookieParser from 'cookie-parser';
 
 const port = parseInt(process.env.PORT || '3000', 10);
