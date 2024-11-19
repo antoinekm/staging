@@ -1,9 +1,12 @@
 import cookieParser from "cookie-parser";
 import crypto from "crypto";
-import express, { Request, Response } from "express";
+import type { Request, Response } from "express";
+import express from "express";
 import session from "express-session";
 import { defineEventHandler, createError } from "h3";
 import staging, { StagingOptions } from "staging";
+
+const app = express;
 
 const defaultOptions = {
   siteName: "Protected Nuxt Page",
@@ -18,8 +21,9 @@ const defaultOptions = {
 } as const;
 
 export const stagingMiddleware = (options: StagingOptions) => {
-  const stagingApp = express();
-  stagingApp.use(express.urlencoded({ extended: true }));
+  const stagingApp = app();
+
+  stagingApp.use(app.urlencoded({ extended: true }));
   stagingApp.use(cookieParser());
   stagingApp.use(
     session({
