@@ -9,12 +9,20 @@
   "bugs": {
     "url": "https://github.com/AntoineKM/staging/issues"
   },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "homepage": "https://github.com/AntoineKM/staging/tree/master/packages/nuxt",
   "license": "MIT",
   "author": "Antoine Kingue <contact@antoinek.fr>",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
