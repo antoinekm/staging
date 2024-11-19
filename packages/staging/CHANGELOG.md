@@ -1,5 +1,11 @@
 # staging
 
+## 0.0.3
+
+### Patch Changes
+
+- [`68e7cdc`](https://github.com/AntoineKM/staging/commit/68e7cdc5a0c27ff731baad27a4139cb338ca763c) Thanks [@AntoineKM](https://github.com/AntoineKM)! - Add enable param to staging options
+
 ## 0.0.2
 
 ### Patch Changes
