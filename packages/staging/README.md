@@ -28,7 +28,7 @@ Staging provides a simple, secure way to password protect your staging environme
 ## Frameworks Support
 
 * Express & Next.js: Use this package directly
-* Nuxt.js: Use [staging-nuxt](https://github.com/AntoineKM/staging/tree/main/packages/nuxt)
+* Nuxt.js: Use [staging-nuxt](https://github.com/AntoineKM/staging/tree/master/packages/nuxt)
 
 ## Installation
 
@@ -111,7 +111,7 @@ app.prepare().then(() => {
 
 ### Nuxt.js
 
-For Nuxt.js integration, please refer to [staging-nuxt](https://github.com/AntoineKM/staging/tree/main/packages/nuxt).
+For Nuxt.js integration, please refer to [staging-nuxt](https://github.com/AntoineKM/staging/tree/master/packages/nuxt).
 
 ## Configuration
 
