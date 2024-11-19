@@ -119,28 +119,31 @@ For Nuxt.js integration, please refer to [staging-nuxt](https://github.com/Antoi
 
 ```typescript
 interface StagingOptions {
-  /** Required password for accessing protected routes */
+  /** Whether the protection should be enabled. Default: true. Can be set via STAGING_ENABLED env var */
+  enabled?: boolean;
+  
+  /** The password required to access protected routes. Can be set via STAGING_PASSWORD env var */
   password?: string;
-  
-  /** Cookie max age in milliseconds. Default: 7 days */
+
+  /** Duration in milliseconds for how long the auth cookie remains valid. Default: 7 days. Can be set via STAGING_COOKIE_MAX_AGE env var (in days) */
   cookieMaxAge?: number;
-  
-  /** JWT secret for signing cookies. Default: random */
+
+  /** Secret used to sign the JWT token. Default: randomly generated. Can be set via STAGING_JWT_SECRET env var */
   jwtSecret?: string;
-  
-  /** Login page path. Default: '/protected' */
+
+  /** Path for the login endpoint. Default: '/protected'. Can be set via STAGING_LOGIN_PATH env var */
   loginPath?: string;
-  
-  /** Site name shown on login page. Default: 'Protected Page' */
+
+  /** Name displayed on the login page. Default: 'Protected Page'. Can be set via STAGING_SITE_NAME env var */
   siteName?: string;
-  
-  /** Routes that should be protected (regex supported) */
+
+  /** Routes that should be protected. Default: all routes except loginPath. Can be set via STAGING_PROTECTED_ROUTES env var as comma-separated paths */
   protectedRoutes?: string[];
-  
-  /** Routes that should be public (regex supported) */
+
+  /** Routes that should never be protected. Default: []. Can be set via STAGING_PUBLIC_ROUTES env var as comma-separated paths */
   publicRoutes?: string[];
-  
-  /** URL to redirect to after login. Default: original URL */
+
+  /** URL to redirect to after successful login. Default: the original requested URL. Can be set via STAGING_REDIRECT_URL env var */
   redirectUrl?: string;
 }
 ```

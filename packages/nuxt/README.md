@@ -36,6 +36,12 @@ export default stagingMiddleware({
 });
 ```
 
+## Example
+
+A complete working example is available in our repository:
+
+* [Nuxt.js Example](https://github.com/AntoineKM/staging/tree/master/examples/nuxt)
+
 ## Nuxt.js Specific Defaults
 
 The middleware comes with Nuxt.js-specific public routes:
