@@ -1,3 +1,5 @@
-import defineEventHandler from "@staging/nuxt";
+import { stagingMiddleware } from "@staging/nuxt";
 
-export default defineEventHandler;
+export default stagingMiddleware({
+  password: "demo",
+});
