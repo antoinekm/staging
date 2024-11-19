@@ -24,6 +24,7 @@ const getEnvNumber = (key: string): number | undefined => {
 };
 
 const defaultOptions = {
+  enabled: true,
   cookieMaxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   jwtSecret: crypto.randomBytes(64).toString("hex"),
   loginPath: "/protected",
@@ -35,6 +36,7 @@ const defaultOptions = {
 
 const mergeWithEnv = (defaults: typeof defaultOptions) => {
   return {
+    enabled: getEnvValue("ENABLED") === "false" ? false : defaults.enabled,
     cookieMaxAge: getEnvNumber("COOKIE_MAX_AGE") ?? defaults.cookieMaxAge,
     jwtSecret: getEnvValue("JWT_SECRET") ?? defaults.jwtSecret,
     loginPath: getEnvValue("LOGIN_PATH") ?? defaults.loginPath,
@@ -201,6 +203,11 @@ export default function staging(options: StagingOptions = {}) {
   const cssRoute = `${staticPrefix}/styles.css`;
 
   return (req: Request, res: Response, next: NextFunction) => {
+    // Skip all checks if staging is disabled
+    if (!mergedOptions.enabled) {
+      return next();
+    }
+
     if (process.env.DEBUG) {
       console.log("Incoming request path:", req.path);
     }

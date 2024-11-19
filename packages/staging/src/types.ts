@@ -16,6 +16,8 @@ declare module "express-session" {
 }
 
 export interface StagingOptions {
+  /** Whether the protection is enabled. Default: true. Can be set via STAGING_ENABLED env var */
+  enabled?: boolean;
   /** The password required to access protected routes. Can be set via STAGING_PASSWORD env var */
   password?: string;
   /** Duration in milliseconds for how long the auth cookie remains valid. Default: 7 days. Can be set via STAGING_COOKIE_MAX_AGE env var (in days) */
