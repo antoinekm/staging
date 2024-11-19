@@ -82,8 +82,8 @@ importers:
         specifier: ^3.14.159
         version: 3.14.159(@parcel/watcher@2.5.0)(@types/node@22.9.0)(eslint@9.15.0(jiti@2.4.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.27.2)(terser@5.36.0)(typescript@5.6.3)(vite@5.4.11(@types/node@22.9.0)(terser@5.36.0))
       staging-nuxt:
-        specifier: latest
-        version: 0.0.1
+        specifier: workspace:*
+        version: link:../../packages/nuxt
       vue:
         specifier: latest
         version: 3.5.13(typescript@5.6.3)
@@ -4509,9 +4509,6 @@ packages:
 
   stable-hash@0.0.4:
     resolution: {integrity: sha512-LjdcbuBeLcdETCrPn9i8AYAZ1eCtu4ECAWtP7UleOiZ9LzVxRzzUZEoZ8zB24nhkQnDWyET0I+3sWokSDS3E7g==}
-
-  staging-nuxt@0.0.1:
-    resolution: {integrity: sha512-OpPKnS0xoNKgwkS7BgSfBdj5kQHgtOK4dGxz0Ac2rLsHazR1vFqgZDg1SZ2DFcAB/Tf92rKdATWUWW8KHF3KnQ==}
 
   staging@0.0.3:
     resolution: {integrity: sha512-GwC3d9Jxq0/N+XUxTwhrEj7SH8BEl8gOLJmXISPMRGDIXSmIXJK0a2xxeIgAnHyBZnvFLz8LdO5+urbd3eI57A==}
@@ -10436,16 +10433,6 @@ snapshots:
 
   stable-hash@0.0.4:
     optional: true
-
-  staging-nuxt@0.0.1:
-    dependencies:
-      cookie-parser: 1.4.7
-      express: 4.21.1
-      express-session: 1.18.1
-      h3: 1.13.0
-      staging: 0.0.3(express@4.21.1)
-    transitivePeerDependencies:
-      - supports-color
 
   staging@0.0.3(express@4.21.1):
     dependencies:

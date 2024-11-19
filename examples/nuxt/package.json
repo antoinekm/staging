@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "staging-nuxt": "latest",
+    "staging-nuxt": "workspace:*",
     "nuxt": "^3.14.159",
     "vue": "latest",
     "vue-router": "latest"
