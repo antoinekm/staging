@@ -9,7 +9,7 @@ Nuxt.js integration for [staging](https://github.com/AntoineKM/staging) password
 
 ## Overview
 
-For full documentation and features, please refer to the [main staging documentation](../../README.md).
+For full documentation and features, please refer to the [main staging documentation](https://github.com/AntoineKM/staging/blob/master/packages/staging/README.md).
 
 This package provides Nuxt.js integration for the staging password protection middleware.
 
@@ -68,7 +68,7 @@ export default stagingMiddleware({
 
 ## License
 
-[MIT](../../LICENSE)
+[MIT](https://github.com/AntoineKM/staging/blob/master/LICENSE)
 
 ***
 
