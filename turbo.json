@@ -11,6 +11,7 @@
         "dist/**/*.js",
         "dist/**/*.css",
         ".next/**",
+        ".nuxt/**",
         ".output/**",
         "index.js",
         "ssg.js",
