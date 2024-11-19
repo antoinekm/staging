@@ -18,12 +18,18 @@ const generateTemplatesModule = () => {
   const setup = readTemplate("setup.html");
   const styles = readTemplate("styles.css");
 
-  return `// This file is auto-generated during build. Do not edit.
+  return `// This file is auto-generated. Do not edit.
+/* eslint-disable */
 export const loginTemplate = ${JSON.stringify(template)};
 export const setupTemplate = ${JSON.stringify(setup)};
 export const stylesContent = ${JSON.stringify(styles)};
 `;
 };
+
+// Generate templates.ts before build starts
+const templatesPath = path.join(__dirname, "src", "templates.ts");
+fs.writeFileSync(templatesPath, generateTemplatesModule());
+console.log("✓ Generated templates.ts");
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -43,23 +49,8 @@ export default defineConfig({
     "jsonwebtoken",
     "crypto",
   ],
+  // Don't remove templates.ts after build since we're in watch mode
   async onSuccess() {
-    // Generate templates module
-    const templatesContent = generateTemplatesModule();
-    const templatesPath = path.join(__dirname, "src", "templates.ts");
-
-    // Write templates module
-    await fs.promises.writeFile(templatesPath, templatesContent);
-    console.log("✓ Generated templates.ts");
-
-    // Clean up the templates file after build
-    process.on("exit", () => {
-      try {
-        fs.unlinkSync(templatesPath);
-        console.log("✓ Cleaned up templates.ts");
-      } catch (err) {
-        // Ignore cleanup errors
-      }
-    });
+    console.log("✓ Build completed successfully");
   },
 });
