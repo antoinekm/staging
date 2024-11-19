@@ -6,6 +6,8 @@ import path from "path";
 
 import { StagingOptions } from "./types";
 
+export * from "./types";
+
 const getEnvValue = (key: string): string | undefined => {
   const envKey = `STAGING_${key.toUpperCase()}`;
   return process.env[envKey];
@@ -149,7 +151,7 @@ const isProtectedRoute = (
   return true;
 };
 
-export function staging(options: StagingOptions = {}) {
+export default function staging(options: StagingOptions = {}) {
   const password = options.password || getEnvValue("PASSWORD");
 
   // Merge environment variables and provided options
