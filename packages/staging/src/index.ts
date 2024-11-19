@@ -1,9 +1,8 @@
 import crypto from "crypto";
 import { Request, Response, NextFunction } from "express";
-import fs from "fs";
 import jwt from "jsonwebtoken";
-import path from "path";
 
+import { loginTemplate, setupTemplate, stylesContent } from "./templates";
 import { StagingOptions } from "./types";
 
 export * from "./types";
@@ -188,16 +187,6 @@ export default function staging(options: StagingOptions = {}) {
     console.log("Merged public routes:", mergedOptions.publicRoutes);
   }
 
-  // Read and cache the templates and CSS
-  const templatePath = path.join(__dirname, "template.html");
-  const setupPath = path.join(__dirname, "setup.html");
-  const cssPath = path.join(__dirname, "styles.css");
-
-  // Cache the file contents
-  const template = fs.readFileSync(templatePath, "utf-8");
-  const setupTemplate = fs.readFileSync(setupPath, "utf-8");
-  const cssContent = fs.readFileSync(cssPath, "utf-8");
-
   // Define static routes
   const staticPrefix = "/_staging";
   const cssRoute = `${staticPrefix}/styles.css`;
@@ -212,9 +201,8 @@ export default function staging(options: StagingOptions = {}) {
       console.log("Incoming request path:", req.path);
     }
 
-    // Serve the CSS file
     if (req.path === cssRoute) {
-      res.type("text/css").send(cssContent);
+      res.type("text/css").send(stylesContent);
       return;
     }
 
@@ -225,7 +213,9 @@ export default function staging(options: StagingOptions = {}) {
 
     // If no password is set, show setup instructions
     if (!password) {
-      const setupHtml = setupTemplate.replace(/\{\{cssPath\}\}/g, cssRoute);
+      const setupHtml = setupTemplate
+        .replace(/\{\{cssPath\}\}/g, cssRoute)
+        .replace(/\{\{siteName\}\}/g, mergedOptions.siteName);
       return res.status(500).send(setupHtml);
     }
 
@@ -295,7 +285,7 @@ export default function staging(options: StagingOptions = {}) {
     }
 
     // If no valid token, render login page with replacements
-    const html = template
+    const html = loginTemplate
       .replace(/\{\{siteName\}\}/g, mergedOptions.siteName)
       .replace(/\{\{loginPath\}\}/g, mergedOptions.loginPath)
       .replace(/\{\{cssPath\}\}/g, cssRoute);
