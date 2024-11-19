@@ -93,31 +93,19 @@ importers:
 
   packages/nuxt:
     dependencies:
-      cookie-parser:
-        specifier: ^1.4.7
-        version: 1.4.7
-      express:
-        specifier: ^4.21.1
-        version: 4.21.1
-      express-session:
-        specifier: ^1.18.1
-        version: 1.18.1
       h3:
         specifier: ^1.13.0
         version: 1.13.0
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
       staging:
         specifier: workspace:*
         version: link:../staging
     devDependencies:
-      '@types/cookie-parser':
-        specifier: ^1.4.7
-        version: 1.4.7
-      '@types/express':
-        specifier: ^4.17.21
-        version: 4.17.21
-      '@types/express-session':
-        specifier: ^1.18.0
-        version: 1.18.0
+      '@types/jsonwebtoken':
+        specifier: ^9.0.5
+        version: 9.0.7
       '@types/node':
         specifier: ^22.0.0
         version: 22.9.0
