@@ -1,5 +1,11 @@
 # staging
 
+## 0.0.5
+
+### Patch Changes
+
+- [`de3da14`](https://github.com/AntoineKM/staging/commit/de3da14c8128538441e63fabc3d7ea527c33413c) Thanks [@AntoineKM](https://github.com/AntoineKM)! - Update README
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "staging-nuxt",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Nuxt module for staging password protection",
   "repository": {
     "type": "git",
