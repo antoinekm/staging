@@ -12,7 +12,9 @@ Open-source alternative to Vercel's Password Protection feature
 
 Staging provides a simple, secure way to password protect your staging environments. It works seamlessly with Express, Next.js and Nuxt.js applications, offering a modern, responsive login interface.
 
-![Staging Login Page](https://raw.githubusercontent.com/AntoineKM/staging/master/screenshots/login-preview.png)
+https://github.com/user-attachments/assets/c9369415-bc26-41e3-88c8-2de7a72e14c5
+
+
 
 ## Features
 
