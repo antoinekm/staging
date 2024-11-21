@@ -75,7 +75,7 @@ staging/
 
 ### Commit Convention
 
-We use [onruntime studio conventions](https://github.com/onruntime) with gitmoji for our commit messages. Your commit messages should be lowercase and include an appropriate emoji prefix.
+We use [onRuntime Studio Conventions](https://docs.onruntime.com/contributing/commits) with gitmoji for our commit messages. Your commit messages should be lowercase and include an appropriate emoji prefix.
 
 Examples:
 
