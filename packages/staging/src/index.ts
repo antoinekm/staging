@@ -1,11 +1,10 @@
 import crypto from "crypto";
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 
-import { loginTemplate, setupTemplate, stylesContent } from "./templates";
 import { StagingOptions } from "./types";
-import { getEnvValue, mergeWithEnv } from "./utils/env";
-import { isProtectedRoute, normalizeRoute } from "./utils/routes";
+import { mergeWithEnv } from "./utils/env";
+import { CookieOptions, handleStagingProcess } from "./utils/process";
+import { normalizeRoute } from "./utils/routes";
 
 export * from "./templates";
 export * from "./types";
@@ -53,129 +52,66 @@ export const mergeOptions = (
 };
 
 export default function staging(options: StagingOptions = {}) {
-  const password = options.password || getEnvValue("PASSWORD");
-
-  // Merge environment variables and provided options
   const envOptions = mergeWithEnv(DEFAULT_OPTIONS);
-  const mergedOptions = mergeOptions(DEFAULT_OPTIONS, envOptions, {
-    ...options,
-    jwtSecret: options.jwtSecret,
-  });
-
-  if (process.env.DEBUG) {
-    console.log("Merged public routes:", mergedOptions.publicRoutes);
-  }
+  const mergedOptions = mergeOptions(DEFAULT_OPTIONS, envOptions, options);
 
   // Define static routes
   const staticPrefix = "/_staging";
   const cssRoute = `${staticPrefix}/styles.css`;
 
-  return (req: Request, res: Response, next: NextFunction) => {
-    // Skip all checks if staging is disabled
-    if (!mergedOptions.enabled) {
-      return next();
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await handleStagingProcess<Response>({
+        context: {
+          url: req.path,
+          method: req.method,
+          password: req.body?.password,
+          cookies: req.cookies || {},
+          originalUrl: req.originalUrl,
+          session: req.session as any,
+        },
+        options: mergedOptions,
+        staticPrefix,
+        cssRoute,
+        callbacks: {
+          sendHtml: (html, statusCode) => {
+            res.status(statusCode);
+            return res.send(html);
+          },
+          sendCss: (css) => {
+            res.type("text/css");
+            return res.send(css);
+          },
+          redirect: (url) => {
+            res.redirect(url);
+            return res;
+          },
+          setCookie: (name, value, options: CookieOptions) => {
+            return res.cookie(name, value, options);
+          },
+          clearCookie: (name) => res.clearCookie(name),
+          setSessionValue: (key, value) => {
+            if (req.session) {
+              (req.session as any)[key] = value;
+            }
+            return res;
+          },
+          clearSessionValue: (key) => {
+            if (req.session) {
+              delete (req.session as any)[key];
+            }
+            return res;
+          },
+          next: () => {
+            next();
+            return res;
+          },
+        },
+      });
+
+      return result;
+    } catch (error) {
+      next(error);
     }
-
-    if (process.env.DEBUG) {
-      console.log("Incoming request path:", req.path);
-    }
-
-    // Serve the CSS file
-    if (req.path === cssRoute) {
-      res.type("text/css").send(stylesContent);
-      return;
-    }
-
-    // Skip auth check for static assets
-    if (req.path.startsWith(staticPrefix)) {
-      return next();
-    }
-
-    // If no password is set, show setup instructions
-    if (!password) {
-      const setupHtml = setupTemplate
-        .replace(/\{\{cssPath\}\}/g, cssRoute)
-        .replace(/\{\{siteName\}\}/g, mergedOptions.siteName);
-      return res.status(500).send(setupHtml);
-    }
-
-    // Store original URL for redirect after login
-    const originalUrl = req.originalUrl || "/";
-
-    // Check if the request is for the login page
-    if (req.path === mergedOptions.loginPath) {
-      if (req.method === "POST") {
-        if (req.body.password === password) {
-          const token = jwt.sign({}, mergedOptions.jwtSecret, {
-            expiresIn: mergedOptions.cookieMaxAge,
-          });
-          res.cookie("staging", token, {
-            maxAge: mergedOptions.cookieMaxAge,
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-          });
-
-          // Redirect to the original URL or configured redirect URL
-          let redirectTo = mergedOptions.redirectUrl;
-
-          // If we have a stored return URL in the session, use that
-          if (req.session?.returnTo) {
-            redirectTo = req.session.returnTo;
-            // Clear the stored URL after use
-            delete req.session.returnTo;
-          } else {
-            // If no stored URL, use the original URL
-            redirectTo = originalUrl;
-          }
-
-          return res.redirect(redirectTo);
-        } else {
-          return res.status(401).send("Invalid password");
-        }
-      }
-
-      const html = loginTemplate
-        .replace(/\{\{siteName\}\}/g, mergedOptions.siteName)
-        .replace(/\{\{loginPath\}\}/g, mergedOptions.loginPath)
-        .replace(/\{\{cssPath\}\}/g, cssRoute);
-
-      return res.send(html);
-    }
-
-    // Check if this route should be protected
-    if (!isProtectedRoute(req.path, mergedOptions)) {
-      if (process.env.DEBUG) {
-        console.log("Route is not protected, allowing access:", req.path);
-      }
-      return next();
-    }
-
-    // Check for valid JWT token in cookie
-    const token = req.cookies?.staging;
-    if (token) {
-      try {
-        jwt.verify(token, mergedOptions.jwtSecret);
-        return next();
-      } catch (err) {
-        if (process.env.DEBUG) {
-          console.log("Invalid token, clearing cookie");
-        }
-        res.clearCookie("staging");
-      }
-    }
-
-    // Store return URL in session if available
-    if (req.session) {
-      req.session.returnTo = originalUrl;
-    }
-
-    // If no valid token, render login page with replacements
-    const html = loginTemplate
-      .replace(/\{\{siteName\}\}/g, mergedOptions.siteName)
-      .replace(/\{\{loginPath\}\}/g, mergedOptions.loginPath)
-      .replace(/\{\{cssPath\}\}/g, cssRoute);
-
-    res.status(401).send(html);
   };
 }

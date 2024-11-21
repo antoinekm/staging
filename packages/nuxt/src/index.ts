@@ -2,24 +2,21 @@ import crypto from "crypto";
 import {
   defineEventHandler,
   readBody,
-  getCookie,
   setCookie,
   createError,
   H3Event,
   sendRedirect,
   setResponseHeader,
   setResponseStatus,
+  parseCookies,
 } from "h3";
-import jwt from "jsonwebtoken";
+import type { CookieOptions } from "staging";
 import {
   DEFAULT_OPTIONS,
   StagingOptions,
-  isProtectedRoute,
-  loginTemplate,
+  handleStagingProcess,
   mergeOptions,
   mergeWithEnv,
-  setupTemplate,
-  stylesContent,
 } from "staging";
 
 const NUXT_DEFAULT_OPTIONS = {
@@ -45,135 +42,91 @@ export const stagingMiddleware = (options: StagingOptions) => {
   const staticPrefix = "/_staging";
   const cssRoute = `${staticPrefix}/styles.css`;
 
-  const renderLoginPage = (event: H3Event, statusCode = 200) => {
-    setResponseStatus(event, statusCode);
-    setResponseHeader(event, "Content-Type", "text/html");
-    return loginTemplate
-      .replace(/\{\{siteName\}\}/g, mergedOptions.siteName)
-      .replace(/\{\{loginPath\}\}/g, mergedOptions.loginPath)
-      .replace(/\{\{cssPath\}\}/g, cssRoute);
-  };
-
-  return defineEventHandler(async (event: H3Event) => {
-    try {
-      // Skip if staging is disabled
-      if (!mergedOptions.enabled) {
-        return;
-      }
-
-      const url = event.node.req.url || "/";
-
-      if (process.env.DEBUG) {
-        console.log("Incoming request path:", url);
-      }
-
-      // Serve CSS file
-      if (url === cssRoute) {
-        setResponseHeader(event, "Content-Type", "text/css");
-        return stylesContent;
-      }
-
-      // Skip auth check for static assets
-      if (url.startsWith(staticPrefix)) {
-        return;
-      }
-
-      // If no password is set, show setup instructions
-      if (!mergedOptions.password) {
-        setResponseStatus(event, 500);
-        setResponseHeader(event, "Content-Type", "text/html");
-        return setupTemplate
-          .replace(/\{\{cssPath\}\}/g, cssRoute)
-          .replace(/\{\{siteName\}\}/g, mergedOptions.siteName);
-      }
-
-      // Handle login path first
-      if (url === mergedOptions.loginPath) {
-        // Handle POST request for login
-        if (event.node.req.method === "POST") {
-          try {
-            const body = await readBody(event);
-            if (body.password === mergedOptions.password) {
-              // Generate JWT token
-              const token = jwt.sign({}, mergedOptions.jwtSecret, {
-                expiresIn: mergedOptions.cookieMaxAge,
-              });
-
-              // Set auth cookie
-              setCookie(event, "staging", token, {
-                maxAge: mergedOptions.cookieMaxAge / 1000,
-                path: "/",
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-              });
-
-              // Get redirect URL
-              const redirectUrl =
-                getCookie(event, "staging_redirect") ||
-                mergedOptions.redirectUrl;
-
-              // Clear redirect cookie
-              setCookie(event, "staging_redirect", "", {
-                maxAge: -1,
-                path: "/",
-              });
-
-              // Perform redirect
-              return sendRedirect(event, redirectUrl);
-            }
-          } catch (err) {
-            console.error("Error processing login:", err);
-          }
-          throw createError({
-            statusCode: 401,
-            message: "Invalid password",
-          });
-        }
-
-        // Return login page for GET request
-        return renderLoginPage(event);
-      }
-
-      // Check if route should be protected
-      if (!isProtectedRoute(url, mergedOptions)) {
-        if (process.env.DEBUG) {
-          console.log("Route is not protected, allowing access:", url);
-        }
-        return;
-      }
-
-      // Verify JWT token
-      const token = getCookie(event, "staging");
-      if (token) {
-        try {
-          jwt.verify(token, mergedOptions.jwtSecret);
-          return; // Valid token, continue
-        } catch (err) {
-          if (process.env.DEBUG) {
-            console.log("Invalid token, clearing cookie");
-          }
-          setCookie(event, "staging", "", {
-            maxAge: -1,
-            path: "/",
-          });
-        }
-      }
-
-      // Store current URL for redirect after login
-      setCookie(event, "staging_redirect", url, {
+  // Create reusable callbacks object
+  const createCallbacks = (event: H3Event) => ({
+    sendHtml: (html: string, statusCode: number) => {
+      setResponseStatus(event, statusCode);
+      setResponseHeader(event, "Content-Type", "text/html");
+      return html;
+    },
+    sendCss: (css: string) => {
+      setResponseHeader(event, "Content-Type", "text/css");
+      return css;
+    },
+    redirect: async (redirectUrl: string) => {
+      await sendRedirect(event, redirectUrl);
+      return undefined;
+    },
+    setCookie: (name: string, value: string, options: CookieOptions) => {
+      setCookie(event, name, value, {
+        ...options,
+        maxAge: options.maxAge ? Math.floor(options.maxAge / 1000) : undefined,
+      });
+      return undefined;
+    },
+    clearCookie: (name: string) => {
+      setCookie(event, name, "", { maxAge: -1, path: "/" });
+      return undefined;
+    },
+    setSessionValue: (key: string, value: string) => {
+      setCookie(event, `staging_${key}`, value, {
         httpOnly: true,
         maxAge: 300,
         path: "/",
       });
+      return undefined;
+    },
+    clearSessionValue: (key: string) => {
+      setCookie(event, `staging_${key}`, "", { maxAge: -1, path: "/" });
+      return undefined;
+    },
+    next: () => undefined,
+  });
 
-      // Return login page with 401 status
-      return renderLoginPage(event, 401);
+  return defineEventHandler(async (event: H3Event) => {
+    try {
+      const url = event.node.req.url || "/";
+      const method = event.node.req.method || "GET";
+      const callbacks = createCallbacks(event);
+
+      // Create base context
+      const baseContext = {
+        url,
+        method,
+        cookies: parseCookies(event),
+        originalUrl: url,
+      };
+
+      // Handle POST to login path
+      if (method === "POST" && url === mergedOptions.loginPath) {
+        const body = await readBody(event);
+        return await handleStagingProcess({
+          context: {
+            ...baseContext,
+            password: body.password,
+          },
+          options: mergedOptions,
+          staticPrefix,
+          cssRoute,
+          callbacks,
+        });
+      }
+
+      // Handle all other requests
+      return await handleStagingProcess({
+        context: baseContext,
+        options: mergedOptions,
+        staticPrefix,
+        cssRoute,
+        callbacks,
+      });
     } catch (error) {
-      console.error("Middleware error:", error);
+      console.error("[staging] Middleware error:", error);
+      const isKnownError = error instanceof Error;
       throw createError({
-        statusCode: 500,
-        message: "Internal server error",
+        statusCode:
+          isKnownError && error.message === "Invalid password" ? 401 : 500,
+        message: isKnownError ? error.message : "Internal server error",
       });
     }
   });

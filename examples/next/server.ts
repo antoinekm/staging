@@ -39,6 +39,7 @@ app.prepare().then(() => {
   // Apply password protection middleware
   expressApp.use(
     staging({
+      siteName: "Protected Next Page",
       publicRoutes: ["/_next/static/.*", "/api/public/.*"],
     }),
   );
