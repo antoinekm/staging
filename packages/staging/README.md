@@ -212,6 +212,17 @@ Each framework may provide additional options. See their respective documentatio
 
 All options can be configured via environment variables:
 
+To generate secure secrets for your environment, you can use:
+
+```bash
+# Generate a secure JWT secret
+openssl rand -base64 32
+# or
+node -e "console.log(crypto.randomBytes(32).toString('base64'))"
+```
+
+Then set your environment variables:
+
 ```env
 # Required
 STAGING_PASSWORD=your-password
