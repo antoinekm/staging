@@ -11,6 +11,11 @@ Next.js integration for [staging](https://github.com/AntoineKM/staging) password
 
 Edge Runtime compatible password protection for Next.js applications.
 
+### Live Demo
+
+Try out our Next.js demo (password: `demo`):
+🚀 [staging-next.vercel.app](https://staging-next.vercel.app/)
+
 ## Installation
 
 ```bash

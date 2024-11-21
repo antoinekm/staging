@@ -14,7 +14,12 @@ Staging provides a simple, secure way to password protect your staging environme
 
 https://github.com/user-attachments/assets/c9369415-bc26-41e3-88c8-2de7a72e14c5
 
+### Live Demos
 
+Try out our demo sites (password: `demo`):
+
+* 🚀 Next.js Demo: [staging-next.vercel.app](https://staging-next.vercel.app/)
+* ⚡️ Nuxt.js Demo: [staging-nuxt.vercel.app](https://staging-nuxt.vercel.app/)
 
 ## Features
 

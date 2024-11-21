@@ -7,6 +7,11 @@ Nuxt.js integration for [staging](https://github.com/AntoineKM/staging) password
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
+### Live Demo
+
+Try out our Nuxt.js demo (password: `demo`):
+⚡️ [staging-nuxt.vercel.app](https://staging-nuxt.vercel.app/)
+
 ## Installation
 
 ```bash
