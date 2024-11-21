@@ -7,12 +7,6 @@ Nuxt.js integration for [staging](https://github.com/AntoineKM/staging) password
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-## Overview
-
-For full documentation and features, please refer to the [main staging documentation](https://github.com/AntoineKM/staging/blob/master/packages/staging/README.md).
-
-This package provides Nuxt.js integration for the staging password protection middleware.
-
 ## Installation
 
 ```bash
@@ -29,22 +23,38 @@ Create a server middleware file in your Nuxt.js project:
 
 ```typescript
 // server/middleware/staging.ts
-import { stagingMiddleware } from "staging-nuxt";
+import staging from 'staging-nuxt';
 
-export default stagingMiddleware({
-  password: process.env.STAGING_PASSWORD || "your-password",
+export default staging({
+  password: process.env.STAGING_PASSWORD,
+  siteName: "My Protected Site"
 });
 ```
 
-## Example
+## Features
 
-A complete working example is available in our repository:
+* Native Nuxt.js middleware integration
+* Built-in H3 support
+* Cookie-based session handling
+* Nitro compatibility
 
-* [Nuxt.js Example](https://github.com/AntoineKM/staging/tree/master/examples/nuxt)
+## Configuration
 
-## Nuxt.js Specific Defaults
+See the [main documentation](../../README.md#configuration) for base options.
 
-The middleware comes with Nuxt.js-specific public routes:
+### Nuxt-specific Options
+
+Additional options available for Nuxt:
+
+```typescript
+interface StagingNuxtOptions extends StagingOptions {
+  // Future Nuxt-specific options will be added here
+}
+```
+
+### Default Configuration
+
+The middleware comes with Nuxt-specific defaults:
 
 ```typescript
 const defaultOptions = {
@@ -63,7 +73,7 @@ const defaultOptions = {
 You can add additional public or protected routes while keeping these defaults:
 
 ```typescript
-export default stagingMiddleware({
+export default staging({
   password: process.env.STAGING_PASSWORD,
   publicRoutes: [
     "^/public(/.*)?$",
@@ -72,12 +82,12 @@ export default stagingMiddleware({
 });
 ```
 
+### Example
+
+A complete working example is available in our repository:
+
+* [Nuxt.js Example](https://github.com/AntoineKM/staging/tree/master/examples/nuxt)
+
 ## License
 
 [MIT](https://github.com/AntoineKM/staging/blob/master/LICENSE)
-
-***
-
-<p align="center">
-  <sub>Built with ❤️ by <a href="https://github.com/AntoineKM">Antoine Kingue</a></sub>
-</p>

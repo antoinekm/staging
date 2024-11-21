@@ -10,7 +10,7 @@ Open-source alternative to Vercel's Password Protection feature
 
 ## Overview
 
-Staging provides a simple, secure way to password protect your staging environments. It works seamlessly with Express and Next.js applications, offering a modern, responsive login interface.
+Staging provides a simple, secure way to password protect your staging environments. It works seamlessly with Express, Next.js and Nuxt.js applications, offering a modern, responsive login interface.
 
 ![Staging Login Page](https://raw.githubusercontent.com/AntoineKM/staging/master/screenshots/login-preview.png)
 
@@ -25,32 +25,48 @@ Staging provides a simple, secure way to password protect your staging environme
 * 🛡️ Secure by default
 * 📱 Mobile-friendly design
 
-## Frameworks Support
+## Framework Support
 
-* Express & Next.js: Use this package directly
-* Nuxt.js: Use [staging-nuxt](https://github.com/AntoineKM/staging/tree/master/packages/nuxt)
+Each framework has its own package with specific optimizations and implementations:
+
+* Express.js: [`staging-express`](packages/express/README.md)
+* Next.js: [`staging-next`](packages/next/README.md)
+* Nuxt.js: [`staging-nuxt`](packages/nuxt/README.md)
 
 ## Installation
 
+Choose and install the package for your framework:
+
 ```bash
-npm install staging
+# For Express.js
+npm install staging-express
 # or
-yarn add staging
-```
+yarn add staging-express
+# or
+pnpm add staging-express
 
-For Nuxt.js applications, install the Nuxt-specific package instead:
+# For Next.js
+npm install staging-next
+# or
+yarn add staging-next
+# or
+pnpm add staging-next
 
-```bash
+# For Nuxt.js
 npm install staging-nuxt
+# or
+yarn add staging-nuxt
+# or
+pnpm add staging-nuxt
 ```
 
 ## Quick Start
 
-### Express
+### Express.js
 
 ```typescript
 import express from 'express';
-import staging from 'staging';
+import staging from 'staging-express';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -58,64 +74,43 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(staging({
-  password: process.env.SITE_PASSWORD
+  password: process.env.STAGING_PASSWORD
 }));
 ```
+
+For more Express.js specific features, check out the [Express.js docs](packages/express/README.md).
 
 ### Next.js
 
 ```typescript
-// server.ts
-import { createServer } from 'http';
-import { parse } from 'url';
-import next from 'next';
-import express from 'express';
-import staging from 'staging';
-import cookieParser from 'cookie-parser';
+// middleware.ts
+import staging from 'staging-next';
 
-const port = parseInt(process.env.PORT || '3000', 10);
-const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
-const handle = app.getRequestHandler();
-
-app.prepare().then(() => {
-  const expressApp = express();
-
-  expressApp.use(express.urlencoded({ extended: true }));
-  expressApp.use(cookieParser());
-  expressApp.use(staging({
-    password: process.env.SITE_PASSWORD,
-    publicRoutes: ['^/(_next|static|images|favicon\\.ico|api/health)(/.*)?$']
-  }));
-
-  createServer((req, res) => {
-    try {
-      const parsedUrl = parse(req.url!, true);
-      
-      // Create a middleware handler
-      const handler = expressApp as any;
-      
-      // Run the middleware stack
-      handler(req, res, (err: Error) => {
-        if (err) throw err;
-        handle(req, res, parsedUrl);
-      });
-    } catch (err) {
-      console.error('Error occurred handling', req.url, err);
-      res.statusCode = 500;
-      res.end('Internal Server Error');
-    }
-  }).listen(port);
+export const middleware = staging({
+  password: process.env.STAGING_PASSWORD
 });
 ```
 
+For Edge Runtime optimizations and Next.js specific features, check out the [Next.js docs](packages/next/README.md).
+
 ### Nuxt.js
 
-For Nuxt.js integration, please refer to [staging-nuxt](https://github.com/AntoineKM/staging/tree/master/packages/nuxt).
+```typescript
+// server/middleware/staging.ts
+import staging from "staging-nuxt";
+
+export default staging({
+  password: process.env.STAGING_PASSWORD
+});
+```
+
+For Nuxt-specific features and H3 integration, check out the [Nuxt.js docs](packages/nuxt/README.md).
 
 ## Configuration
 
 ### Options
+
+All frameworks support these base options:
 
 ```typescript
 interface StagingOptions {
@@ -148,52 +143,45 @@ interface StagingOptions {
 }
 ```
 
+Each framework may provide additional options. See their respective documentation for details.
+
 ### Environment Variables
 
-All options can be configured via environment variables. Copy the `.env.example` file to your project and customize it:
+All options can be configured via environment variables:
 
-```bash
-cp .env.example .env
+```env
+# Required
+STAGING_PASSWORD=your-password
+
+# Optional
+STAGING_ENABLED=true
+STAGING_JWT_SECRET=your-jwt-secret
+STAGING_COOKIE_MAX_AGE=7 # days
+STAGING_LOGIN_PATH=/protected
+STAGING_SITE_NAME="Protected Page"
+STAGING_PROTECTED_ROUTES=/admin/*,/dashboard/*
+STAGING_PUBLIC_ROUTES=/api/public/*,/static/*
+STAGING_REDIRECT_URL=/
 ```
-
-Check the [.env.example](.env.example) file for all available options and their descriptions.
 
 ### Route Protection
 
 You can use regex patterns to protect or expose routes:
 
 ```typescript
-// Protect specific paths
-app.use(staging({
-  password: 'your-password',
+{
+  // Protect specific paths
   protectedRoutes: [
     '^/admin(/.*)?$',    // Protect /admin/*
     '^/dashboard(/.*)?$' // Protect /dashboard/*
-  ]
-}));
+  ],
 
-// Make specific paths public
-app.use(staging({
-  password: 'your-password',
+  // Make specific paths public
   publicRoutes: [
     '^/(_next|static|images)(/.*)?$', // Public assets
     '^/api/public(/.*)?$'             // Public API routes
   ]
-}));
-```
-
-## Session Support (Optional)
-
-For better UX with redirects, you can add session support:
-
-```typescript
-import session from 'express-session';
-
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret',
-  resave: false,
-  saveUninitialized: false
-}));
+}
 ```
 
 ## Security
@@ -205,6 +193,37 @@ The middleware:
 * Enables secure cookies in production
 * Implements sameSite cookie policy
 * Generates random JWT secrets by default
+
+## Examples
+
+Full examples for each framework are available in the repository:
+
+* [Express.js Example](examples/express)
+* [Next.js Example](examples/next)
+* [Nuxt.js Example](examples/nuxt)
+
+## Framework-specific Features
+
+Each framework implementation has its own optimizations and features:
+
+* **Express.js** ([docs](packages/express/README.md))
+  * Session support
+  * Express middleware integration
+  * Node.js optimized
+
+* **Next.js** ([docs](packages/next/README.md))
+  * Edge Runtime compatible
+  * Next.js middleware
+  * Cookie-based session handling
+
+* **Nuxt.js** ([docs](packages/nuxt/README.md))
+  * H3 integration
+  * Nuxt-specific route handling
+  * Cookie-based session handling
+
+## Contributing
+
+Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
 
 ## License
 
