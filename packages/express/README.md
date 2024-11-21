@@ -56,16 +56,6 @@ app.use(staging({
 
 See the [main documentation](../../README.md#configuration) for base options.
 
-### Express-specific Options
-
-Additional options available for Express:
-
-```typescript
-interface StagingExpressOptions extends StagingOptions {
-  // Future Express-specific options will be added here
-}
-```
-
 ### Session Support
 
 For better UX with redirects, add session support:

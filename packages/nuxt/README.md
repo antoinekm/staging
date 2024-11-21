@@ -47,16 +47,6 @@ export default staging({
 
 See the [main documentation](../../README.md#configuration) for base options.
 
-### Nuxt-specific Options
-
-Additional options available for Nuxt:
-
-```typescript
-interface StagingNuxtOptions extends StagingOptions {
-  // Future Nuxt-specific options will be added here
-}
-```
-
 ### Default Configuration
 
 The middleware comes with Nuxt-specific defaults:
