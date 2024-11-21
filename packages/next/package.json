@@ -1,0 +1,35 @@
+{
+  "name": "staging-next",
+  "version": "0.0.0",
+  "description": "Next.js integration for staging password protection",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntoineKM/staging.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AntoineKM/staging/issues"
+  },
+  "homepage": "https://github.com/AntoineKM/staging/tree/master/packages/next",
+  "license": "MIT",
+  "author": "Antoine Kingue <contact@antoinek.fr>",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "staging": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.2"
+  }
+}

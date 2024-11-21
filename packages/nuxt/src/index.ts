@@ -19,7 +19,7 @@ import {
   mergeWithEnv,
 } from "staging";
 
-const NUXT_DEFAULT_OPTIONS = {
+export const NUXT_DEFAULT_OPTIONS = {
   ...DEFAULT_OPTIONS,
   siteName: "Protected Nuxt Page",
   publicRoutes: [
@@ -30,14 +30,12 @@ const NUXT_DEFAULT_OPTIONS = {
     "/assets/*",
     "/_ipx/*",
   ] as string[],
+  jwtSecret: crypto.randomBytes(32).toString("hex"),
 } as const;
 
-export const stagingMiddleware = (options: StagingOptions) => {
+export default function staging(options: StagingOptions) {
   const envOptions = mergeWithEnv(NUXT_DEFAULT_OPTIONS);
-  const mergedOptions = mergeOptions(NUXT_DEFAULT_OPTIONS, envOptions, {
-    ...options,
-    jwtSecret: options.jwtSecret || crypto.randomBytes(32).toString("hex"),
-  });
+  const mergedOptions = mergeOptions(NUXT_DEFAULT_OPTIONS, envOptions, options);
 
   const staticPrefix = "/_staging";
   const cssRoute = `${staticPrefix}/styles.css`;
@@ -135,6 +133,4 @@ export const stagingMiddleware = (options: StagingOptions) => {
       });
     }
   });
-};
-
-export default stagingMiddleware;
+}

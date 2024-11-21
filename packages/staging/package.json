@@ -46,6 +46,7 @@
     "typescript": "^5.3.2"
   },
   "dependencies": {
+    "jose": "^5.9.6",
     "jsonwebtoken": "^9.0.2"
   }
 }

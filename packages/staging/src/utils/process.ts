@@ -1,5 +1,5 @@
 // packages/staging/src/utils/process.ts
-import jwt from "jsonwebtoken";
+import { SignJWT, jwtVerify } from "jose";
 
 import { loginTemplate, setupTemplate, stylesContent } from "../templates";
 import { isProtectedRoute } from "./routes";
@@ -57,6 +57,27 @@ export interface StagingProcessOptions<ResponseType> {
   callbacks: StagingCallbacks<ResponseType>;
 }
 
+export interface SetupTemplateVariables {
+  pageTitle: string;
+  title: string;
+  description: string;
+  alertText: string;
+  setupMethod1Label: string;
+  setupMethod1: string;
+  setupMethod2Label: string;
+  setupMethod2: string;
+  footerText: string;
+  cssPath: string;
+}
+
+function renderSetupTemplate(variables: SetupTemplateVariables): string {
+  let html = setupTemplate;
+  Object.entries(variables).forEach(([key, value]) => {
+    html = html.replace(new RegExp(`{{${key}}}`, "g"), value);
+  });
+  return html;
+}
+
 export async function handleStagingProcess<ResponseType>({
   context,
   options,
@@ -85,22 +106,53 @@ export async function handleStagingProcess<ResponseType>({
     return callbacks.next();
   }
 
-  // If no password is set, show setup instructions
-  if (!options.password) {
-    const setupHtml = setupTemplate
-      .replace(/\{\{cssPath\}\}/g, cssRoute)
-      .replace(/\{\{siteName\}\}/g, options.siteName);
+  // Verify JWT Secret is set
+  if (!options.jwtSecret || options.jwtSecret === "unset") {
+    const setupHtml = renderSetupTemplate({
+      pageTitle: "Setup Required",
+      title: "Setup Required",
+      description: "JWT Secret not configured",
+      alertText:
+        "To protect your routes, you need to set up a JWT secret for token encryption. You can do this in two ways:",
+      setupMethod1Label: "Using environment variable",
+      setupMethod1: "STAGING_JWT_SECRET=your-secret",
+      setupMethod2Label: "Or when initializing the middleware",
+      setupMethod2: "staging({\n  jwtSecret: 'your-secret'\n})",
+      footerText: "Please set up the JWT secret and restart your application.",
+      cssPath: cssRoute,
+    });
     return callbacks.sendHtml(setupHtml, 500);
   }
 
-  // Handle login path
+  // If no password is set, show setup instructions
+  if (!options.password) {
+    const setupHtml = renderSetupTemplate({
+      pageTitle: "Setup Required",
+      title: "Setup Required",
+      description: "Password not configured",
+      alertText:
+        "To protect your routes, you need to set up a password. You can do this in two ways:",
+      setupMethod1Label: "Using environment variable",
+      setupMethod1: "STAGING_PASSWORD=your-password",
+      setupMethod2Label: "Or when initializing the middleware",
+      setupMethod2: "staging({\n  password: 'your-password'\n})",
+      footerText: "Please set up the password and restart your application.",
+      cssPath: cssRoute,
+    });
+    return callbacks.sendHtml(setupHtml, 500);
+  }
+
   if (url === options.loginPath) {
     if (method === "POST") {
       if (context.password === options.password) {
+        // Convert jwtSecret to Uint8Array for jose
+        const secretKey = new TextEncoder().encode(options.jwtSecret);
         // Generate JWT token
-        const token = jwt.sign({}, options.jwtSecret, {
-          expiresIn: options.cookieMaxAge,
-        });
+        const token = await new SignJWT({})
+          .setProtectedHeader({ alg: "HS256" })
+          .setIssuedAt()
+          .setExpirationTime("7d")
+          .sign(secretKey);
 
         // Set auth cookie
         await callbacks.setCookie("staging", token, {
@@ -119,7 +171,6 @@ export async function handleStagingProcess<ResponseType>({
         } else {
           redirectUrl = originalUrl;
         }
-        console.log("[staging] Redirecting to:", redirectUrl);
         return callbacks.redirect(redirectUrl);
       }
       // Invalid password
@@ -146,7 +197,8 @@ export async function handleStagingProcess<ResponseType>({
   const token = cookies.staging;
   if (token) {
     try {
-      jwt.verify(token, options.jwtSecret);
+      const secretKey = new TextEncoder().encode(options.jwtSecret);
+      await jwtVerify(token, secretKey);
       return callbacks.next();
     } catch (err) {
       if (process.env.DEBUG) {

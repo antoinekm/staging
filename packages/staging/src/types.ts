@@ -23,7 +23,7 @@ export interface StagingOptions {
   /** Duration in milliseconds for how long the auth cookie remains valid. Default: 7 days. Can be set via STAGING_COOKIE_MAX_AGE env var (in days) */
   cookieMaxAge?: number;
   /** Secret used to sign the JWT token. Default: randomly generated. Can be set via STAGING_JWT_SECRET env var */
-  jwtSecret?: string;
+  jwtSecret?: string | "unset";
   /** Path for the login endpoint. Default: '/protected'. Can be set via STAGING_LOGIN_PATH env var */
   loginPath?: string;
   /** Name displayed on the login page. Default: 'Protected Page'. Can be set via STAGING_SITE_NAME env var */

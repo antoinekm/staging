@@ -1,0 +1,40 @@
+{
+  "name": "staging-express",
+  "version": "0.0.0",
+  "description": "Express integration for staging password protection",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntoineKM/staging.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AntoineKM/staging/issues"
+  },
+  "homepage": "https://github.com/AntoineKM/staging/tree/master/packages/express",
+  "license": "MIT",
+  "author": "Antoine Kingue <contact@antoinek.fr>",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "staging": "workspace:*",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
+    "@types/express": "^4.17.21",
+    "@types/express-session": "^1.18.0",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.2"
+  }
+}

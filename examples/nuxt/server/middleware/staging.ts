@@ -1,5 +1,5 @@
-import { stagingMiddleware } from "staging-nuxt";
+import staging from "staging-nuxt";
 
-export default stagingMiddleware({
+export default staging({
   password: "demo",
 });

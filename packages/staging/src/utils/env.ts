@@ -1,5 +1,5 @@
-import { DEFAULT_OPTIONS } from "..";
 import { StagingOptions } from "../types";
+import { DEFAULT_OPTIONS } from "./options";
 
 export const getEnvValue = (key: string): string | undefined => {
   const envKey = `STAGING_${key.toUpperCase()}`;
