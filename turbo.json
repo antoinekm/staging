@@ -13,6 +13,7 @@
         ".next/**",
         ".nuxt/**",
         ".output/**",
+        ".vercel/**",
         "index.js",
         "ssg.js",
         "loader.js"
