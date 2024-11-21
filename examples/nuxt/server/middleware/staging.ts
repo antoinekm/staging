@@ -1,6 +1,6 @@
 import { stagingMiddleware } from "staging-nuxt";
 
 export default stagingMiddleware({
-  enabled: true,
+  enabled: process.env.VERCEL_ENV === "preview" || true,
   password: "demo",
 });

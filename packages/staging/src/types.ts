@@ -1,10 +1,10 @@
-import "express-session";
+import { Session } from "express-session";
 
 declare module "express-serve-static-core" {
   interface Request {
-    session?: {
+    session?: Session & {
       returnTo?: string;
-      [key: string]: unknown;
+      [key: string]: any;
     };
   }
 }
