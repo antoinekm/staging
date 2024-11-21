@@ -1,3 +1,4 @@
+import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 import {
   mergeWithEnv,
@@ -31,20 +32,43 @@ const NEXT_DEFAULT_OPTIONS = {
 
 async function getRequestBody(
   request: NextRequest,
+  loginPath: string,
 ): Promise<{ password?: string }> {
+  // Only process body for POST requests to login path
+  if (request.method !== "POST" || request.nextUrl.pathname !== loginPath) {
+    return {};
+  }
+
+  const contentType = request.headers.get("content-type");
+
   try {
-    const formData = await request.formData();
-    return {
-      password: formData.get("password")?.toString(),
-    };
-  } catch {
-    try {
+    if (contentType?.includes("application/x-www-form-urlencoded")) {
+      const formData = await request.formData();
+      return {
+        password: formData.get("password")?.toString(),
+      };
+    }
+
+    if (contentType?.includes("application/json")) {
       const json = (await request.json()) as { password?: string };
       return json;
-    } catch {
-      return {};
     }
+  } catch (error) {
+    console.error("[staging] Error parsing request body:", error);
   }
+
+  return {};
+}
+
+function convertCookieOptions(options: CookieOptions): Partial<ResponseCookie> {
+  return {
+    ...options,
+    maxAge: options.maxAge ? Math.floor(options.maxAge / 1000) : undefined,
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+  };
 }
 
 function convertCookies(
@@ -61,7 +85,7 @@ export interface StagingNextOptions extends StagingOptions {
   matcher?: string[];
 }
 
-export default function staging(options: StagingNextOptions = {}) {
+export default function staging(options: StagingNextOptions) {
   const { matcher, ...stagingOptions } = options;
 
   const initializedOptions = {
@@ -85,20 +109,18 @@ export default function staging(options: StagingNextOptions = {}) {
       const method = request.method;
       const cookies = convertCookies(request.cookies);
 
-      const body =
-        method === "POST" && url === mergedOptions.loginPath
-          ? await getRequestBody(request)
-          : {};
+      // Get body only if necessary
+      const body = await getRequestBody(request, mergedOptions.loginPath);
+
+      // Create base response for cookie handling
+      const baseResponse = NextResponse.next();
+
+      let response: NextResponse | null = null;
 
       const originalUrl =
         method === "POST" && url === mergedOptions.loginPath
           ? cookies["staging_returnTo"] || "/"
           : url;
-
-      let response: NextResponse | null = null;
-
-      // Create a base response for cookie handling
-      const baseResponse = NextResponse.next();
 
       await handleStagingProcess({
         context: {
@@ -119,7 +141,7 @@ export default function staging(options: StagingNextOptions = {}) {
             response = new NextResponse(html, {
               status: statusCode,
               headers: {
-                "Content-Type": "text/html",
+                "Content-Type": "text/html; charset=utf-8",
               },
             });
             return html;
@@ -134,38 +156,20 @@ export default function staging(options: StagingNextOptions = {}) {
           },
           redirect: async (redirectUrl: string) => {
             const url = new URL(redirectUrl, request.url);
-            response = NextResponse.redirect(url, {
-              // 307 preserves the request method and body
-              status: 307,
-              headers: baseResponse.headers,
-            });
+            if (method === "POST") {
+              response = NextResponse.redirect(url, { status: 303 });
+            } else {
+              response = NextResponse.redirect(url);
+            }
             return undefined;
           },
           setCookie: (name: string, value: string, options: CookieOptions) => {
-            // Always set cookies on the base response first
-            baseResponse.cookies.set(name, value, {
-              ...options,
-              maxAge: options.maxAge
-                ? Math.floor(options.maxAge / 1000)
-                : undefined,
-              path: "/",
-              httpOnly: true,
-              secure: process.env.NODE_ENV === "production",
-              sameSite: "lax",
-            });
+            const cookieOptions = convertCookieOptions(options);
 
-            // If we have a response, set it there too
+            baseResponse.cookies.set(name, value, cookieOptions);
+
             if (response) {
-              response.cookies.set(name, value, {
-                ...options,
-                maxAge: options.maxAge
-                  ? Math.floor(options.maxAge / 1000)
-                  : undefined,
-                path: "/",
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-              });
+              response.cookies.set(name, value, cookieOptions);
             }
             return undefined;
           },
@@ -178,29 +182,26 @@ export default function staging(options: StagingNextOptions = {}) {
           },
           setSessionValue: (key: string, value: string) => {
             if (key === "returnTo" && value !== mergedOptions.loginPath) {
-              baseResponse.cookies.set("staging_returnTo", value, {
+              const cookieOptions: Partial<ResponseCookie> = {
                 httpOnly: true,
                 maxAge: 300,
                 path: "/",
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
-              });
+              };
+
+              baseResponse.cookies.set(`staging_${key}`, value, cookieOptions);
               if (response) {
-                response.cookies.set("staging_returnTo", value, {
-                  httpOnly: true,
-                  maxAge: 300,
-                  path: "/",
-                  secure: process.env.NODE_ENV === "production",
-                  sameSite: "lax",
-                });
+                response.cookies.set(`staging_${key}`, value, cookieOptions);
               }
             }
             return undefined;
           },
           clearSessionValue: (key: string) => {
-            baseResponse.cookies.delete(`staging_${key}`);
+            const cookieName = `staging_${key}`;
+            baseResponse.cookies.delete(cookieName);
             if (response) {
-              response.cookies.delete(`staging_${key}`);
+              response.cookies.delete(cookieName);
             }
             return undefined;
           },
@@ -211,8 +212,10 @@ export default function staging(options: StagingNextOptions = {}) {
         },
       });
 
-      // Copy cookies from baseResponse to final response if they exist
+      // Use response from callbacks or base response
       const finalResponse = response || baseResponse;
+
+      // Ensure all cookies are properly set
       baseResponse.cookies.getAll().forEach((cookie) => {
         finalResponse.cookies.set(cookie.name, cookie.value, cookie);
       });
