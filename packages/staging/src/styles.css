@@ -10,6 +10,11 @@
   --radius: 0.5rem;
   --code-bg: #171717;
   --code-fg: #ffffff;
+  
+  --error: #dc2626;
+  --error-foreground: #fef2f2;
+  --error-border: #fee2e2;
+  --error-shadow: rgb(220 38 38 / 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,6 +29,11 @@
     --primary-foreground: #000000;
     --code-bg: #171717;
     --code-fg: #ffffff;
+    
+    --error: #fca5a5;
+    --error-foreground: #450a0a;
+    --error-border: #7f1d1d;
+    --error-shadow: rgb(252 165 165 / 100%);
   }
 }
 
@@ -189,4 +199,26 @@ form {
   .container {
     padding: 1.5rem;
   }
+}
+
+.error-message {
+  background: var(--error-foreground);
+  border: 1px solid var(--error-border);
+  color: var(--error);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-error {
+  border-color: var(--error);
+}
+
+.input-error:focus {
+  border-color: var(--error);
+  box-shadow: 0 0 0 1px var(--error-shadow);
 }

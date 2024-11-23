@@ -78,6 +78,34 @@ function renderSetupTemplate(variables: SetupTemplateVariables): string {
   return html;
 }
 
+function renderLoginTemplate(variables: {
+  siteName: string;
+  loginPath: string;
+  cssPath: string;
+  error?: string;
+}): string {
+  let html = loginTemplate;
+
+  // Replace basic variables
+  Object.entries(variables).forEach(([key, value]) => {
+    if (typeof value === "string") {
+      html = html.replace(new RegExp(`{{${key}}}`, "g"), value);
+    }
+  });
+
+  // Handle conditional error message
+  if (variables.error) {
+    html = html.replace("{{#if error}}", "");
+    html = html.replace("{{/if}}", "");
+    html = html.replace("{{error}}", variables.error);
+  } else {
+    // Remove error blocks if no error
+    html = html.replace(/{{#if error}}[\s\S]*?{{\/if}}/g, "");
+  }
+
+  return html;
+}
+
 export async function handleStagingProcess<ResponseType>({
   context,
   options,
@@ -174,7 +202,13 @@ export async function handleStagingProcess<ResponseType>({
         return callbacks.redirect(redirectUrl);
       }
       // Invalid password
-      return callbacks.sendHtml("Invalid password", 401);
+      const html = renderLoginTemplate({
+        siteName: options.siteName,
+        loginPath: options.loginPath,
+        cssPath: cssRoute,
+        error: "Invalid password. Please try again.",
+      });
+      return callbacks.sendHtml(html, 401);
     }
 
     // GET request - show login form
@@ -214,10 +248,10 @@ export async function handleStagingProcess<ResponseType>({
   }
 
   // Show login form with 401 status
-  const html = loginTemplate
-    .replace(/\{\{siteName\}\}/g, options.siteName)
-    .replace(/\{\{loginPath\}\}/g, options.loginPath)
-    .replace(/\{\{cssPath\}\}/g, cssRoute);
-
-  return callbacks.sendHtml(html, 401);
+  const html = renderLoginTemplate({
+    siteName: options.siteName,
+    loginPath: options.loginPath,
+    cssPath: cssRoute,
+  });
+  return callbacks.sendHtml(html, 200);
 }

@@ -15,6 +15,11 @@
         <h1 class="title">{{siteName}}</h1>
         <p class="description">Please enter the password to continue</p>
       </div>
+      {{#if error}}
+      <div class="error-message">
+        {{error}}
+      </div>
+      {{/if}}
       <form method="POST" action="{{loginPath}}">
         <div class="input-group">
           <label for="password" class="input-label">Password</label>
@@ -22,7 +27,7 @@
             type="password" 
             id="password"
             name="password" 
-            class="input"
+            class="input {{#if error}}input-error{{/if}}"
             placeholder="Enter password" 
             required
             autocomplete="current-password"
