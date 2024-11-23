@@ -84,24 +84,21 @@ function renderLoginTemplate(variables: {
   cssPath: string;
   error?: string;
 }): string {
+  const templateVars = {
+    siteName: variables.siteName,
+    loginPath: variables.loginPath,
+    cssPath: variables.cssPath,
+    errorHtml: variables.error
+      ? `<div class="error-message">${variables.error}</div>`
+      : "",
+    errorClass: variables.error ? " input-error" : "",
+  };
+
   let html = loginTemplate;
 
-  // Replace basic variables
-  Object.entries(variables).forEach(([key, value]) => {
-    if (typeof value === "string") {
-      html = html.replace(new RegExp(`{{${key}}}`, "g"), value);
-    }
+  Object.entries(templateVars).forEach(([key, value]) => {
+    html = html.replace(new RegExp(`{{${key}}}`, "g"), value || "");
   });
-
-  // Handle conditional error message
-  if (variables.error) {
-    html = html.replace("{{#if error}}", "");
-    html = html.replace("{{/if}}", "");
-    html = html.replace("{{error}}", variables.error);
-  } else {
-    // Remove error blocks if no error
-    html = html.replace(/{{#if error}}[\s\S]*?{{\/if}}/g, "");
-  }
 
   return html;
 }
@@ -212,10 +209,11 @@ export async function handleStagingProcess<ResponseType>({
     }
 
     // GET request - show login form
-    const html = loginTemplate
-      .replace(/\{\{siteName\}\}/g, options.siteName)
-      .replace(/\{\{loginPath\}\}/g, options.loginPath)
-      .replace(/\{\{cssPath\}\}/g, cssRoute);
+    const html = renderLoginTemplate({
+      siteName: options.siteName,
+      loginPath: options.loginPath,
+      cssPath: cssRoute,
+    });
     return callbacks.sendHtml(html, 200);
   }
 
