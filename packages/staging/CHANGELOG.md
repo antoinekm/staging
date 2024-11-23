@@ -1,5 +1,13 @@
 # staging
 
+## 0.0.6
+
+### Patch Changes
+
+- [`7afc0b6`](https://github.com/AntoineKM/staging/commit/7afc0b6bc604d7a5e14c40780101b0f85f52fa3b) Thanks [@AntoineKM](https://github.com/AntoineKM)! - Fix STAGING_PASSWORD env
+
+- [`c80bdce`](https://github.com/AntoineKM/staging/commit/c80bdce15f670791f531237bd6e12c224f19e959) Thanks [@AntoineKM](https://github.com/AntoineKM)! - Add better handling UX
+
 ## 0.0.5
 
 ### Patch Changes
