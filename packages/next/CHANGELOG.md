@@ -1,5 +1,12 @@
 # staging-next
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`7afc0b6`](https://github.com/AntoineKM/staging/commit/7afc0b6bc604d7a5e14c40780101b0f85f52fa3b), [`c80bdce`](https://github.com/AntoineKM/staging/commit/c80bdce15f670791f531237bd6e12c224f19e959)]:
+  - staging@0.0.6
+
 ## 0.0.2
 
 ### Patch Changes

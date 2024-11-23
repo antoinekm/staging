@@ -1,6 +1,6 @@
 {
   "name": "staging-next",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Next.js integration for staging password protection",
   "repository": {
     "type": "git",
