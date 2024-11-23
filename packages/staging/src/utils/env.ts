@@ -16,18 +16,46 @@ export const getEnvNumber = (key: string): number | undefined => {
   return value ? parseInt(value, 10) : undefined;
 };
 
+export const getEnvBoolean = (key: string): boolean | undefined => {
+  const value = getEnvValue(key);
+  return value ? value === "true" : undefined;
+};
+
 export const mergeWithEnv = (
   defaults: typeof DEFAULT_OPTIONS,
 ): StagingOptions => {
+  const enabled = getEnvBoolean("ENABLED");
+  const cookieMaxAge = getEnvNumber("COOKIE_MAX_AGE");
+  const password = getEnvValue("PASSWORD");
+  const jwtSecret = getEnvValue("JWT_SECRET");
+  const loginPath = getEnvValue("LOGIN_PATH");
+  const siteName = getEnvValue("SITE_NAME");
+  const protectedRoutes = getEnvArray("PROTECTED_ROUTES");
+  const publicRoutes = getEnvArray("PUBLIC_ROUTES");
+  const redirectUrl = getEnvValue("REDIRECT_URL");
+
+  if (process.env.DEBUG) {
+    console.log("Staging Environment Configuration:", {
+      enabled,
+      password: password ? "[SET]" : "[NOT SET]",
+      jwtSecret: jwtSecret ? "[SET]" : "[NOT SET]",
+      loginPath,
+      siteName,
+      protectedRoutes,
+      publicRoutes,
+      redirectUrl,
+    });
+  }
+
   return {
-    enabled: getEnvValue("ENABLED") === "false" ? false : defaults.enabled,
-    cookieMaxAge: getEnvNumber("COOKIE_MAX_AGE") ?? defaults.cookieMaxAge,
-    jwtSecret: getEnvValue("JWT_SECRET"),
-    password: getEnvValue("PASSWORD"),
-    loginPath: getEnvValue("LOGIN_PATH") ?? defaults.loginPath,
-    siteName: getEnvValue("SITE_NAME") ?? defaults.siteName,
-    protectedRoutes: getEnvArray("PROTECTED_ROUTES"),
-    publicRoutes: getEnvArray("PUBLIC_ROUTES"),
-    redirectUrl: getEnvValue("REDIRECT_URL") ?? defaults.redirectUrl,
+    enabled: enabled ?? defaults.enabled,
+    cookieMaxAge: cookieMaxAge ?? defaults.cookieMaxAge,
+    password,
+    jwtSecret,
+    loginPath: loginPath ?? defaults.loginPath,
+    siteName: siteName ?? defaults.siteName,
+    protectedRoutes,
+    publicRoutes,
+    redirectUrl: redirectUrl ?? defaults.redirectUrl,
   };
 };
