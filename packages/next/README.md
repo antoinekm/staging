@@ -81,6 +81,46 @@ export const middleware = staging({
 });
 ```
 
+### Advanced Middleware Configuration
+
+#### Combining with Custom Auth Middleware
+
+While we recommend using [Nemo](https://nemo.rescale.build/) for a more robust authentication solution, according to [Next.js documentation about nested middleware](https://nextjs.org/docs/messages/nested-middleware), you can also combine multiple middleware functions. Here's how to combine staging protection with your own authentication middleware to handle both password protection for staging environments and user authentication:
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+import staging from "staging-next";
+import { getToken } from "@/services/jwt";
+
+// Your custom auth middleware implementation
+async function authMiddleware(request: NextRequest) {
+  // Add your auth logic here
+  return NextResponse.redirect(new URL("/auth", request.url));
+}
+
+// Routes that require authentication
+const authMiddlewareMatcher = [
+  "/dashboard",
+  "/settings",
+  "/checkout",
+];
+
+// Configure staging middleware
+const stagingMiddleware = staging({
+  siteName: "My Protected Site",
+});
+
+// Combined middleware function
+export function middleware(request: NextRequest) {
+  if (authMiddlewareMatcher.some((path) => 
+    request.nextUrl.pathname.startsWith(path)
+  )) {
+    return authMiddleware(request);
+  }
+  return stagingMiddleware(request);
+}
+```
+
 ### Example
 
 A complete working example is available in our repository:
