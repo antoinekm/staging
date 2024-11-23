@@ -1,6 +1,6 @@
 {
   "name": "staging-express",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Express integration for staging password protection",
   "repository": {
     "type": "git",

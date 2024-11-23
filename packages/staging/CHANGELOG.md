@@ -1,5 +1,13 @@
 # staging
 
+## 0.0.7
+
+### Patch Changes
+
+- [`47d49cb`](https://github.com/AntoineKM/staging/commit/47d49cba927e6c51da86f4c3c900defb90a99ae8) Thanks [@AntoineKM](https://github.com/AntoineKM)! - Improve login form error handling with better UX. Instead of showing a blank error page, errors are now displayed inline on the login form with proper styling. Template rendering has been improved to avoid showing template variables in the output.
+
+- [`2196994`](https://github.com/AntoineKM/staging/commit/2196994254c2cfd83056cfe4d15ac56b49a21ac8) Thanks [@AntoineKM](https://github.com/AntoineKM)! - Fix environment variables not being properly recognized and improve options merging priority. Environment variables can now be set with or without the `STAGING_` prefix, and passwords are correctly detected from both environment variables and direct configuration.
+
 ## 0.0.6
 
 ### Patch Changes
