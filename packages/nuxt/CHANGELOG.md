@@ -1,5 +1,12 @@
 # staging-nuxt
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`47d49cb`](https://github.com/AntoineKM/staging/commit/47d49cba927e6c51da86f4c3c900defb90a99ae8), [`2196994`](https://github.com/AntoineKM/staging/commit/2196994254c2cfd83056cfe4d15ac56b49a21ac8)]:
+  - staging@0.0.7
+
 ## 0.0.5
 
 ### Patch Changes
