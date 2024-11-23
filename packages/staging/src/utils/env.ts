@@ -18,11 +18,12 @@ export const getEnvNumber = (key: string): number | undefined => {
 
 export const mergeWithEnv = (
   defaults: typeof DEFAULT_OPTIONS,
-): Partial<StagingOptions> => {
+): StagingOptions => {
   return {
     enabled: getEnvValue("ENABLED") === "false" ? false : defaults.enabled,
     cookieMaxAge: getEnvNumber("COOKIE_MAX_AGE") ?? defaults.cookieMaxAge,
     jwtSecret: getEnvValue("JWT_SECRET"),
+    password: getEnvValue("PASSWORD"),
     loginPath: getEnvValue("LOGIN_PATH") ?? defaults.loginPath,
     siteName: getEnvValue("SITE_NAME") ?? defaults.siteName,
     protectedRoutes: getEnvArray("PROTECTED_ROUTES"),
