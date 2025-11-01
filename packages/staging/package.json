@@ -41,7 +41,7 @@
     "@types/express-serve-static-core": "^5.0.1",
     "@types/express-session": "^1.18.0",
     "@types/jsonwebtoken": "^9.0.5",
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.0.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.2"
   },
