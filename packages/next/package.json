@@ -29,7 +29,7 @@
     "staging": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.0.0",
     "next": "^16.0.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.2"
