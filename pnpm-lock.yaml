@@ -19,10 +19,10 @@ importers:
         version: 8.57.1
       eslint-config-antoine:
         specifier: ^1.0.14
-        version: 1.0.14(eslint@8.57.1)(prettier@3.7.2)(turbo@2.6.1)(typescript@5.9.3)
+        version: 1.0.14(eslint@8.57.1)(prettier@3.7.3)(turbo@2.6.1)(typescript@5.9.3)
       prettier:
         specifier: ^3.3.3
-        version: 3.7.2
+        version: 3.7.3
       turbo:
         specifier: ^2.0.4
         version: 2.6.1
@@ -4890,8 +4890,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  prettier@3.7.2:
-    resolution: {integrity: sha512-n3HV2J6QhItCXndGa3oMWvWFAgN1ibnS7R9mt6iokScBOC0Ul9/iZORmU2IWUMcyAQaMPjTlY3uT34TqocUxMA==}
+  prettier@3.7.3:
+    resolution: {integrity: sha512-QgODejq9K3OzoBbuyobZlUhznP5SKwPqp+6Q6xw6o8gnhr4O85L2U915iM2IDcfF2NPXVaM9zlo9tdwipnYwzg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -9034,7 +9034,7 @@ snapshots:
 
   escape-string-regexp@5.0.0: {}
 
-  eslint-config-antoine@1.0.14(eslint@8.57.1)(prettier@3.7.2)(turbo@2.6.1)(typescript@5.9.3):
+  eslint-config-antoine@1.0.14(eslint@8.57.1)(prettier@3.7.3)(turbo@2.6.1)(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/eslint-plugin': 7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
       '@typescript-eslint/parser': 7.18.0(eslint@8.57.1)(typescript@5.9.3)
@@ -9042,10 +9042,10 @@ snapshots:
       eslint-config-next: 16.0.5(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
       eslint-config-prettier: 9.1.2(eslint@8.57.1)
       eslint-config-turbo: 2.6.1(eslint@8.57.1)(turbo@2.6.1)
-      eslint-config-universe: 12.1.0(eslint@8.57.1)(prettier@3.7.2)(typescript@5.9.3)
-      eslint-plugin-prettier: 5.5.4(eslint-config-prettier@9.1.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.7.2)
+      eslint-config-universe: 12.1.0(eslint@8.57.1)(prettier@3.7.3)(typescript@5.9.3)
+      eslint-plugin-prettier: 5.5.4(eslint-config-prettier@9.1.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.7.3)
       eslint-plugin-react: 7.33.2(eslint@8.57.1)
-      prettier: 3.7.2
+      prettier: 3.7.3
     transitivePeerDependencies:
       - '@types/eslint'
       - eslint-import-resolver-typescript
@@ -9089,7 +9089,7 @@ snapshots:
       eslint-plugin-turbo: 2.6.1(eslint@8.57.1)(turbo@2.6.1)
       turbo: 2.6.1
 
-  eslint-config-universe@12.1.0(eslint@8.57.1)(prettier@3.7.2)(typescript@5.9.3):
+  eslint-config-universe@12.1.0(eslint@8.57.1)(prettier@3.7.3)(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/eslint-plugin': 6.21.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.1)(typescript@5.9.3)
@@ -9097,11 +9097,11 @@ snapshots:
       eslint-config-prettier: 8.10.2(eslint@8.57.1)
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)
       eslint-plugin-node: 11.1.0(eslint@8.57.1)
-      eslint-plugin-prettier: 5.5.4(eslint-config-prettier@8.10.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.7.2)
+      eslint-plugin-prettier: 5.5.4(eslint-config-prettier@8.10.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.7.3)
       eslint-plugin-react: 7.33.2(eslint@8.57.1)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.1)
     optionalDependencies:
-      prettier: 3.7.2
+      prettier: 3.7.3
     transitivePeerDependencies:
       - '@types/eslint'
       - eslint-import-resolver-typescript
@@ -9246,19 +9246,19 @@ snapshots:
       resolve: 1.22.11
       semver: 6.3.1
 
-  eslint-plugin-prettier@5.5.4(eslint-config-prettier@8.10.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.7.2):
+  eslint-plugin-prettier@5.5.4(eslint-config-prettier@8.10.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.7.3):
     dependencies:
       eslint: 8.57.1
-      prettier: 3.7.2
+      prettier: 3.7.3
       prettier-linter-helpers: 1.0.0
       synckit: 0.11.11
     optionalDependencies:
       eslint-config-prettier: 8.10.2(eslint@8.57.1)
 
-  eslint-plugin-prettier@5.5.4(eslint-config-prettier@9.1.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.7.2):
+  eslint-plugin-prettier@5.5.4(eslint-config-prettier@9.1.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.7.3):
     dependencies:
       eslint: 8.57.1
-      prettier: 3.7.2
+      prettier: 3.7.3
       prettier-linter-helpers: 1.0.0
       synckit: 0.11.11
     optionalDependencies:
@@ -11188,7 +11188,7 @@ snapshots:
 
   prettier@2.8.8: {}
 
-  prettier@3.7.2: {}
+  prettier@3.7.3: {}
 
   pretty-bytes@7.1.0: {}
 
