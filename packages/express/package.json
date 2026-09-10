@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
-    "express": "^4.21.1",
+    "express": "^5.0.0",
     "express-session": "^1.18.1",
     "staging": "workspace:*",
     "crypto": "^1.0.1"
